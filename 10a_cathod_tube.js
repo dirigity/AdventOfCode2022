@@ -1,4 +1,37 @@
-let instructions = `noop
+
+function main(input) {
+    let parsed_instructions = input.split("\n").flatMap((inst) => {
+        if (inst.split(" ")[0] == "noop") {
+            return [{ inst: "noop", d_x: 0 }]
+        } else if (inst.split(" ")[0] == "addx") {
+            return [{ inst: "addx1", d_x: 0 }, { inst: "addx2", d_x: Number.parseInt(inst.split(" ")[1]) }]
+        }
+        return [{ inst: "error", d_x: 0 }]
+
+    })
+
+    // console.log(parsed_instructions)
+
+    let res = 0;
+
+    let x = 1;
+
+    let t = 0;
+    for (const inst of parsed_instructions) {
+
+        t++;
+        if ([20, 60, 100, 140, 180, 220].indexOf(t) != -1) {
+            // console.log(t, x, t * x)
+            res += t * x;
+        }
+        x += inst.d_x;
+
+    }
+
+    console.log(res)
+}
+
+let input = `noop
 noop
 addx 15
 addx -10
@@ -147,7 +180,7 @@ noop
 `
 
 if (false)
-    instructions = `addx 15
+    input = `addx 15
 addx -11
 addx 6
 addx -3
@@ -294,37 +327,4 @@ noop
 noop
 noop`
 
-let parsed_instructions = instructions.split("\n").flatMap((inst) => {
-    if (inst.split(" ")[0] == "noop") {
-        return [{ inst: "noop", d_x: 0 }]
-    } else if (inst.split(" ")[0] == "addx") {
-        return [{ inst: "addx1", d_x: 0 }, { inst: "addx2", d_x: Number.parseInt(inst.split(" ")[1]) }]
-    }
-    return [{ inst: "error", d_x: 0 }]
-
-})
-
-console.log(parsed_instructions)
-
-let res = 0;
-
-let x = 1;
-
-let t = 0;
-for (const inst of parsed_instructions) {
-
-    t++;
-    if ([20, 60, 100, 140, 180, 220].indexOf(t) != -1) {
-        console.log(t, x, t * x)
-        res += t * x;
-    }
-    x += inst.d_x;
-
-
-
-
-
-
-}
-
-console.log(res)
+main(input)

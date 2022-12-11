@@ -1,3 +1,38 @@
+
+function main(input_stacks, input_instructions) {
+    let stacks = []
+
+    while (input_stacks[0].length > 0) {
+        let stack = [];
+        for (const i in input_stacks) {
+            stack.push(input_stacks[i].slice(0, 4))
+            input_stacks[i] = input_stacks[i].substring(4);
+        }
+
+        stacks.push(stack.filter(e => e != "    ").map(e => e.substring(1, 2)));
+    }
+
+    console.table(stacks)
+
+    let instructions = input_instructions.split("\n").map(inst => {
+        return {
+            count: Number.parseInt(inst.split(" ")[1]),
+            src: Number.parseInt(inst.split(" ")[3]) - 1,
+            dst: Number.parseInt(inst.split(" ")[5]) - 1
+        }
+    });
+
+    for (const instruction of instructions) {
+        // console.log(instruction)
+        for (let i = 0; i < instruction.count; i++) {
+            stacks[instruction.dst].push(stacks[instruction.src].pop())
+        }
+    }
+
+
+    console.log(stacks.map(e => e[e.length - 1]).join(""))
+}
+
 let input_stacks = `
                     [L]     [H] [W]
                 [J] [Z] [J] [Q] [Q]
@@ -8,19 +43,7 @@ let input_stacks = `
 [J] [S] [Q] [S] [Z] [W] [P] [G] [D]
 [Z] [G] [V] [V] [Q] [M] [L] [N] [R]`.slice(1).split("\n").reverse();
 
-let stacks = []
 
-while (input_stacks[0].length > 0) {
-    let stack = [];
-    for (const i in input_stacks) {
-        stack.push(input_stacks[i].slice(0, 4))
-        input_stacks[i] = input_stacks[i].substring(4);
-    }
-
-    stacks.push(stack.filter(e => e != "    ").map(e => e.substring(1, 2)));
-}
-
-console.table(stacks)
 
 let input_instructions = `move 1 from 3 to 5
 move 2 from 2 to 8
@@ -525,20 +548,4 @@ move 1 from 1 to 8
 move 1 from 3 to 1
 move 2 from 9 to 2`
 
-let instructions = input_instructions.split("\n").map(inst => {
-    return {
-        count: Number.parseInt(inst.split(" ")[1]),
-        src: Number.parseInt(inst.split(" ")[3]) - 1,
-        dst: Number.parseInt(inst.split(" ")[5]) - 1
-    }
-});
-
-for (const instruction of instructions) {
-    console.log(instruction)
-    stacks[instruction.dst] = [...stacks[instruction.dst], ...stacks[instruction.src].slice(stacks[instruction.src].length - instruction.count, stacks[instruction.src].length)]
-    stacks[instruction.src] = stacks[instruction.src].slice(0, stacks[instruction.src].length - instruction.count)
-
-}
-
-console.log(stacks)
-console.log(stacks.map(e => e[e.length - 1]).join(""))
+main(input_stacks, input_instructions)

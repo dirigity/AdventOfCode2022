@@ -1,3 +1,15 @@
+function main(input) {
+
+    let res = input.split("\n\n").map((calories) => calories.split("\n").reduce((sum, curr) => {
+        // console.log(Number.parseInt(curr))
+        return sum + Number.parseInt(curr)
+    }, 0)).reduce((max_rank, curr) => {
+        return [...max_rank, curr].sort((a, b) => b - a).slice(0, 3);
+    }, [])
+    console.log(res, res.reduce((sum, curr) => sum + curr, 0));
+
+}
+
 let input = `5800
 2273
 1315
@@ -2265,10 +2277,4 @@ if (false)
 
 10000`
 
-let res = input.split("\n\n").map((calories) => calories.split("\n").reduce((sum, curr) => {
-    console.log(Number.parseInt(curr))
-    return sum + Number.parseInt(curr)
-}, 0)).reduce((max_rank, curr) => {
-    return [...max_rank, curr].sort((a, b) => b - a).slice(0, 3);
-}, [])
-console.log(res, res.reduce((sum, curr) => sum + curr, 0));
+main(input);

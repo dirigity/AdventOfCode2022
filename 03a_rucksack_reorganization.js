@@ -1,3 +1,37 @@
+function main(input) {
+    const c = (letter) => letter.charCodeAt(0)
+
+    function toPriority(letter) {
+        let ret = c(letter);
+        if (ret >= c("a")) {
+            ret -= c("a") - 1
+        } else {
+            ret -= c("A") - 27
+        }
+        // console.log(letter, ret)
+
+        return ret;
+    }
+
+    // ["a", "b", "z", "A", "B", "Z"].map(toPriority)
+
+    let parsed_input = input.split("\n").map(e => [[...e.slice(0, e.length / 2)].map(toPriority), [...e.slice(e.length / 2, e.length)].map(toPriority)]);
+    parsed_input = parsed_input.map(([a, b]) => [[...new Set(a)], [...new Set(b)]])
+
+    let value_per_pair = (pair) => {
+        for (const a of pair[0]) {
+            for (const b of pair[1]) {
+                if (a == b) return a
+            }
+        }
+    }
+
+    let res = parsed_input.reduce((sum, pair) => sum + value_per_pair(pair), 0)
+
+    console.log(res)
+
+}
+
 let input = `GwrhJPDJCZFRcwfZWV
 LjnQlqNpjjmpmQlLlqNfZRvQcTWcTSTTZcSQcZ
 nNqjdspspngnmjmslqmjjjCDGrHPHMGddGCMCGPPPJWC
@@ -306,44 +340,4 @@ wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
 ttgJtRGJQctTZtZT
 CrZsJsPPZsGzwwsLwLmpwMDw`
 
-const c = (letter) => letter.charCodeAt(0)
-
-function toPriority(letter) {
-    let ret = c(letter);
-    if (ret >= c("a")) {
-        ret -= c("a") - 1
-    } else {
-        ret -= c("A") - 27
-    }
-    // console.log(letter, ret)
-
-    return ret;
-}
-
-let groupByN = (n, data) => {
-    let result = [];
-    for (let i = 0; i < data.length; i += n) result.push(data.slice(i, i + n));
-    return result;
-};
-
-// ["a", "b", "z", "A", "B", "Z"].map(toPriority)
-
-let parsed_input = input.split("\n").map(e => [...e].map(toPriority));
-parsed_input = parsed_input.map((a) => [...new Set(a)])
-
-let groups = groupByN(3, parsed_input);
-
-let res = 0
-
-for (const [A, B, C] of groups) {
-    for (const a of A) {
-        for (const b of B) {
-            for (const c of C) {
-                if (a == b && b === c) res += c;
-            }
-        }
-    }
-}
-
-
-console.log(res)
+main(input)

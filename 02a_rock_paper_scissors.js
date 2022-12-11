@@ -1,3 +1,29 @@
+function main(input) {
+    function outcome_points(atacking_move, defending_move) {
+        if (atacking_move == defending_move) {
+            return 3
+        }
+        if ((atacking_move + 1) % 3 == defending_move) {
+            return 6
+        }
+        return 0
+    }
+
+    const to_words = ["rock", "paper", "scisors"]
+
+    function points_from_round(round) {
+        let atacking_move = { "A": 0, "B": 1, "C": 2 }[round.split(" ")[0]]
+        let defending_move = { "X": 0, "Y": 1, "Z": 2 }[round.split(" ")[1]]
+
+        let ret = defending_move + 1 + outcome_points(atacking_move, defending_move);
+        return ret
+    }
+
+    let res = input.split("\n").map(points_from_round).reduce((sum, curr) => sum + curr, 0);
+
+    console.log(res);
+}
+
 let input = `C X
 C Y
 C X
@@ -2504,26 +2530,4 @@ if (false)
 B X
 C Z`
 
-function outcome_points(atacking_move, defending_move) {
-    if (atacking_move == defending_move) {
-        return 3
-    }
-    if ((atacking_move + 1) % 3 == defending_move) {
-        return 6
-    }
-    return 0
-}
-
-const to_words = ["rock", "paper", "scisors"]
-
-function points_from_round(round) {
-    let atacking_move = { "A": 0, "B": 1, "C": 2 }[round.split(" ")[0]]
-    let defending_move = { "X": 0, "Y": 1, "Z": 2 }[round.split(" ")[1]]
-
-    let ret = defending_move + 1 + outcome_points(atacking_move, defending_move);
-    return ret
-}
-
-let res = input.split("\n").map(points_from_round).reduce((sum, curr) => sum + curr, 0);
-
-console.log(res);
+main(input)

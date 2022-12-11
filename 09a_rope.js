@@ -1,4 +1,50 @@
-let instructions = `L 1
+function main(input) {
+
+    let unfolded_instructions = input.split("\n").flatMap((inst) => {
+
+        let code = inst.split(" ")[0]
+        let times = Number.parseInt(inst.split(" ")[1])
+
+        let instructions = []
+        for (let i = 0; i < times; i++) {
+            instructions.push(code);
+        }
+        return instructions;
+    })
+
+    let h_x = 0
+    let h_y = 0
+    let t_x = 0
+    let t_y = 0
+
+    let trail = {}
+
+    for (const instruction of unfolded_instructions) {
+        let delta = {
+            "R": [0, 1],
+            "L": [0, -1],
+            "U": [1, 0],
+            "D": [-1, 0]
+        }[instruction]
+        let [h_dx, h_dy] = delta
+
+        h_x += h_dx
+        h_y += h_dy
+
+        if (Math.abs(h_x - t_x) > 1 || Math.abs(h_y - t_y) > 1) {
+            t_x = h_x - h_dx
+            t_y = h_y - h_dy;
+
+        }
+
+        trail[t_x + ":" + t_y] = true;
+
+    }
+
+    console.log(Object.keys(trail).length)
+}
+
+let input = `L 1
 R 1
 D 1
 R 2
@@ -1997,11 +2043,10 @@ L 4
 D 19
 R 10
 L 9
-U 18
-`
+U 18`
 
 if (false)
-    instructions = `R 4
+    input = `R 4
 U 4
 L 3
 D 1
@@ -2010,45 +2055,4 @@ D 1
 L 5
 R 2`
 
-let unfolded_instructions = instructions.split("\n").flatMap((inst) => {
-
-    let code = inst.split(" ")[0]
-    let times = Number.parseInt(inst.split(" ")[1])
-
-    let instructions = []
-    for (let i = 0; i < times; i++) {
-        instructions.push(code);
-    }
-    return instructions;
-})
-
-let h_x = 0
-let h_y = 0
-let t_x = 0
-let t_y = 0
-
-let trail = {}
-
-for (const instruction of unfolded_instructions) {
-    let delta = {
-        "R": [0, 1],
-        "L": [0, -1],
-        "U": [1, 0],
-        "D": [-1, 0]
-    }[instruction]
-    let [h_dx, h_dy] = delta
-
-    h_x += h_dx
-    h_y += h_dy
-
-    if (Math.abs(h_x - t_x) > 1 || Math.abs(h_y - t_y) > 1) {
-        t_x = h_x - h_dx
-        t_y = h_y - h_dy;
-
-    }
-
-    trail[t_x + ":" + t_y] = true;
-
-}
-
-console.log(Object.keys(trail).length)
+main(input)

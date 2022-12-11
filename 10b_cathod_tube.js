@@ -1,4 +1,43 @@
-let instructions = `noop
+function main(input) {
+    let parsed_instructions = input.split("\n").flatMap((inst) => {
+        if (inst.split(" ")[0] == "noop") {
+            return [{ inst: "noop", d_x: 0 }]
+        } else if (inst.split(" ")[0] == "addx") {
+            return [{ inst: "addx1", d_x: 0 }, { inst: "addx2", d_x: Number.parseInt(inst.split(" ")[1]) }]
+        }
+        return [{ inst: "error", d_x: 0 }]
+
+    })
+
+    // console.log(parsed_instructions)
+
+
+    let x = 1;
+
+    const height = 6;
+    const width = 40;
+
+    let screen = Array.from({ length: height }, () => new Array(width).fill(" "));
+
+    let t = 0;
+    for (const inst of parsed_instructions) {
+        let screen_x = t % width;
+        let screen_y = Math.floor(t / width)
+        t++;
+
+        if (Math.abs(screen_x - x) < 2) {
+            screen[screen_y][screen_x] = "#"
+        }
+
+        x += inst.d_x;
+    }
+
+
+
+    console.log(screen.map(row => row.join("")).join("\n"))
+}
+
+let input = `noop
 noop
 addx 15
 addx -10
@@ -147,7 +186,7 @@ noop
 `
 
 if (false)
-    instructions = `addx 15
+    input = `addx 15
 addx -11
 addx 6
 addx -3
@@ -294,44 +333,4 @@ noop
 noop
 noop`
 
-let parsed_instructions = instructions.split("\n").flatMap((inst) => {
-    if (inst.split(" ")[0] == "noop") {
-        return [{ inst: "noop", d_x: 0 }]
-    } else if (inst.split(" ")[0] == "addx") {
-        return [{ inst: "addx1", d_x: 0 }, { inst: "addx2", d_x: Number.parseInt(inst.split(" ")[1]) }]
-    }
-    return [{ inst: "error", d_x: 0 }]
-
-})
-
-console.log(parsed_instructions)
-
-
-let x = 1;
-
-const height = 6;
-const width = 40;
-
-let screen = Array.from({ length: height }, () => new Array(width).fill(" "));
-
-let t = 0;
-for (const inst of parsed_instructions) {
-    let screen_x = t % width;
-    let screen_y = Math.floor(t / width)
-    t++;
-
-    if (Math.abs(screen_x - x) < 2) {
-        screen[screen_y][screen_x] = "#"
-    }
-
-    x += inst.d_x;
-
-
-
-
-
-}
-
-
-
-console.log(screen.map(row => row.join("")).join("\n"))
+main(input)

@@ -1,3 +1,65 @@
+function main(input) {
+    let tree_grid = input.split("\n").map(row => row.split(""))
+
+    function transpose(matrix) {
+        let ret = [];
+        for (const x in matrix) {
+            for (const y in matrix[x]) {
+                if (!ret[y]) ret[y] = []
+                ret[y][x] = matrix[x][y]
+            }
+        }
+        return ret;
+    }
+
+
+    function flip(matrix) {
+        let ret = [];
+        for (const x in matrix) {
+            for (const y in matrix[x]) {
+                if (!ret[y]) ret[y] = []
+                ret[y][x] = matrix[y][matrix.length - x - 1]
+            }
+        }
+        return ret;
+    }
+
+    function get_viz(matrix) {
+        let ret = [];
+
+        for (const row of matrix) {
+            let ret_row = [];
+            let current_max = -1;
+            for (let i = 0; i < row.length; i++) {
+                ret_row.push(current_max < row[i])
+                current_max = Math.max(current_max, row[i])
+            }
+            ret.push(ret_row);
+
+        }
+
+
+
+        return ret;
+    }
+
+
+    let up_viz = get_viz(tree_grid)
+    let down_viz = flip(get_viz(flip(tree_grid)))
+    let left_viz = transpose(get_viz(transpose(tree_grid)))
+    let right_viz = transpose(flip(get_viz(flip(transpose(tree_grid)))))
+
+    let res = 0;
+    let res_matrix = tree_grid.map((row, x) => row.map((_, y) => {
+        const OR = up_viz[x][y] || down_viz[x][y] || left_viz[x][y] || right_viz[x][y];
+        res += (OR) ? 1 : 0;
+        return OR ? "x" : " "
+    })).map(e => e.join("")).join("\n")
+
+    // console.log(res_matrix)
+    console.log(res)
+}
+
 let input = `222322213033345255533423306545562424165440655115256171674620442636621123532003623343351021112300040
 110200134424131544435511513034235114207220346712122743100173142606016164253614600344452542043234001
 130241122341034230060506400411050451436457131115555076655121366640166143420114243260041315245140033
@@ -98,51 +160,12 @@ let input = `2223222130333452555334233065455624241654406551152561716746204426366
 404443532404034526430106366644217325436253634242603222554235163606432511155652343363021250505540430
 324114252001344342204144440320420641222766650735522654115551234652234245431600152550532022520100132`
 
-// input = `
-// 30373
-// 25512
-// 65332
-// 33549
-// 35390`.slice(1)
+if (false)
+    input =
+        `30373
+25512
+65332
+33549
+35390`
 
-let tree_grid = input.split("\n").map(row => row.split(""))
-
-let max_score = -1;
-
-function score_of(tree_grid, x0, y0, dx, dy) {
-    // console.log("coords:", x0, y0);
-    let x = x0;
-    let y = y0;
-
-    let score = 0;
-
-    while (x + dx >= 0 && y + dy >= 0 && x + dx < tree_grid.length && y + dy < tree_grid[x].length) {
-        score++;
-
-        x += dx;
-        y += dy;
-        if (tree_grid[x][y] >= tree_grid[x0][y0]) {
-            // console.log("returning", x, y, tree_grid[x][y], tree_grid[x0][y0])
-            return score;
-        }
-
-
-    }
-    return score;
-}
-
-for (let x in tree_grid) {
-    for (let y in tree_grid[x]) {
-        x = Number.parseInt(x)
-        y = Number.parseInt(y)
-        let scoreUp = score_of(tree_grid, x, y, 1, 0)
-        let scoreDown = score_of(tree_grid, x, y, -1, 0)
-        let scoreLeft = score_of(tree_grid, x, y, 0, 1)
-        let scoreRight = score_of(tree_grid, x, y, 0, -1)
-        let score = scoreUp * scoreDown * scoreLeft * scoreRight;
-        console.log(x, y, score, scoreDown, scoreLeft, scoreRight, scoreUp)
-        max_score = Math.max(max_score, score);
-    }
-}
-
-console.log(max_score);
+main(input)

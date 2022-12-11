@@ -1,4 +1,99 @@
-let instructions = `L 1
+function main(input) {
+    let unfolded_instructions = input.split("\n").flatMap((inst) => {
+
+        let code = inst.split(" ")[0]
+        let times = Number.parseInt(inst.split(" ")[1])
+
+        let instructions = []
+        for (let i = 0; i < times; i++) {
+            instructions.push(code);
+        }
+        return instructions;
+    })
+
+    let len = 10;
+    let rope = Array.from({ length: len }, () => { return { x: 0, y: 0 } });
+
+    let trail = {}
+
+    for (const instruction of unfolded_instructions) {
+
+        let last_rope = rope.map(({ x, y }) => { return { x, y } })
+
+        let delta = {
+            "R": [1, 0],
+            "L": [-1, 0],
+            "U": [0, -1],
+            "D": [0, 1]
+        }[instruction]
+        let [h_dx, h_dy] = delta
+
+        rope[0].y += h_dx
+        rope[0].x += h_dy
+
+
+        for (let i = 1; i < len; i++) {
+            let h_x = rope[i - 1].x
+            let h_y = rope[i - 1].y
+
+            let t_x = rope[i].x
+            let t_y = rope[i].y
+
+            if (Math.abs(h_x - t_x) > 1 || Math.abs(h_y - t_y) > 1) {
+
+
+
+                rope[i].x = rope[i - 1].x
+
+                rope[i].y = rope[i - 1].y
+
+
+                if (h_x - t_x == 2) {
+                    rope[i].x = rope[i - 1].x - 1
+                } else if (h_x - t_x == -2) {
+                    rope[i].x = rope[i - 1].x + 1
+                }
+
+                if (h_y - t_y == 2) {
+                    rope[i].y = rope[i - 1].y - 1
+                } else if (h_y - t_y == -2) {
+                    rope[i].y = rope[i - 1].y + 1
+                }
+                // } else {
+                //     rope[i].x = last_rope[i - 1].x;
+                //     rope[i].y = last_rope[i - 1].y;
+
+                // }
+
+            }
+
+        }
+
+        if (false) { // visualization
+            console.log(instruction)
+
+            const screen_size = 40;
+            const empty = "·"
+            let screen = Array.from({ length: screen_size }, () => Array.from({ length: screen_size }, () => empty));
+
+            let i = 0;
+            for (const coord of rope) {
+                if (screen[coord.x + screen_size / 2][coord.y + screen_size / 2] == empty)
+                    screen[coord.x + screen_size / 2][coord.y + screen_size / 2] = (i == 0 ? "H" : i + "")
+                i++;
+            }
+
+            console.log(screen.map((row) => row.join("")).join("\n"))
+            console.log("----")
+        }
+        trail[rope[len - 1].x + ":" + rope[len - 1].y] = true;
+
+    }
+
+    console.log(Object.keys(trail).length)
+}
+
+let input = `L 1
 R 1
 D 1
 R 2
@@ -2001,7 +2096,7 @@ U 18
 `
 
 if (false)
-    instructions = `R 4
+    input = `R 4
 U 4
 L 3
 D 1
@@ -2011,7 +2106,7 @@ L 5
 R 2`
 
 if (false)
-    instructions = `R 5
+    input = `R 5
 U 8
 L 8
 D 3
@@ -2020,99 +2115,4 @@ D 10
 L 25
 U 20`
 
-let unfolded_instructions = instructions.split("\n").flatMap((inst) => {
-
-    let code = inst.split(" ")[0]
-    let times = Number.parseInt(inst.split(" ")[1])
-
-    let instructions = []
-    for (let i = 0; i < times; i++) {
-        instructions.push(code);
-    }
-    return instructions;
-})
-
-let len = 10;
-let rope = Array.from({ length: len }, () => { return { x: 0, y: 0 } });
-
-let trail = {}
-
-for (const instruction of unfolded_instructions) {
-
-    let last_rope = rope.map(({ x, y }) => { return { x, y } })
-
-    let delta = {
-        "R": [1, 0],
-        "L": [-1, 0],
-        "U": [0, -1],
-        "D": [0, 1]
-    }[instruction]
-    let [h_dx, h_dy] = delta
-
-    rope[0].y += h_dx
-    rope[0].x += h_dy
-
-
-    for (let i = 1; i < len; i++) {
-        let h_x = rope[i - 1].x
-        let h_y = rope[i - 1].y
-
-        let t_x = rope[i].x
-        let t_y = rope[i].y
-
-        if (Math.abs(h_x - t_x) > 1 || Math.abs(h_y - t_y) > 1) {
-
-
-
-            rope[i].x = rope[i - 1].x
-
-            rope[i].y = rope[i - 1].y
-
-
-            if (h_x - t_x == 2) {
-                rope[i].x = rope[i - 1].x - 1
-            } else if (h_x - t_x == -2) {
-                rope[i].x = rope[i - 1].x + 1
-            }
-
-            if (h_y - t_y == 2) {
-                rope[i].y = rope[i - 1].y - 1
-            } else if (h_y - t_y == -2) {
-                rope[i].y = rope[i - 1].y + 1
-            }
-            // } else {
-            //     rope[i].x = last_rope[i - 1].x;
-            //     rope[i].y = last_rope[i - 1].y;
-
-            // }
-
-
-
-
-        }
-
-    }
-
-
-    if (false) {
-        console.log(instruction)
-
-        const screen_size = 40;
-        const empty = "·"
-        let screen = Array.from({ length: screen_size }, () => Array.from({ length: screen_size }, () => empty));
-
-        let i = 0;
-        for (const coord of rope) {
-            if (screen[coord.x + screen_size / 2][coord.y + screen_size / 2] == empty)
-                screen[coord.x + screen_size / 2][coord.y + screen_size / 2] = (i == 0 ? "H" : i + "")
-            i++;
-        }
-
-        console.log(screen.map((row) => row.join("")).join("\n"))
-        console.log("----")
-    }
-    trail[rope[len - 1].x + ":" + rope[len - 1].y] = true;
-
-}
-
-console.log(trail, Object.keys(trail).length)
+main(input)

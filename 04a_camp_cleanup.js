@@ -1,3 +1,24 @@
+function main(input) {
+    let parsed_input = input.split("\n").map(e => e.split(",").map(e => {
+        return {
+            start: Math.min(...e.split("-")),
+            end: Math.max(...e.split("-"))
+        }
+    }))
+
+    let ret = 0;
+
+    for (const [rangeA, rangeB] of parsed_input) {
+        if (rangeA.start <= rangeB.start && rangeA.end >= rangeB.end) {
+            ret++
+        } else if (rangeA.start >= rangeB.start && rangeA.end <= rangeB.end) {
+            ret++
+        }
+    }
+
+    console.log(ret);
+}
+
 let input = `2-9,9-51
 33-51,45-73
 28-29,29-93
@@ -999,21 +1020,4 @@ let input = `2-9,9-51
 15-15,14-51
 7-20,6-21`
 
-let parsed_input = input.split("\n").map(e => e.split(",").map(e => {
-    return {
-        start: Math.min(...e.split("-")),
-        end: Math.max(...e.split("-"))
-    }
-}))
-
-let ret = 0;
-
-for (const [rangeA, rangeB] of parsed_input) {
-    if (rangeA.start <= rangeB.start && rangeA.end >= rangeB.end) {
-        ret++
-    } else if (rangeA.start >= rangeB.start && rangeA.end <= rangeB.end) {
-        ret++
-    }
-}
-
-console.log(ret);
+main(input);
