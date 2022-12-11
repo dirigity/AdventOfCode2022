@@ -12,7 +12,7 @@ function main(input_stacks, input_instructions) {
         stacks.push(stack.filter(e => e != "    ").map(e => e.substring(1, 2)));
     }
 
-    console.table(stacks)
+    // console.table(stacks)
 
     let instructions = input_instructions.split("\n").map(inst => {
         return {

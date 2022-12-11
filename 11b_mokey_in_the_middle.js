@@ -1,9 +1,13 @@
 function main(input) {
 
+    let common_mod = 1;
+
     let text_monkeys = input.split("\n\n");
     let monkey_list = text_monkeys.map((text_mokey) => {
 
         let monkey_lines = text_mokey.split("\n")
+        const mod = Number.parseInt(monkey_lines[3].split("divisible by ")[1])
+        common_mod *= mod;
         return {
             monkey_name: monkey_lines[0].split(":")[0],
             data: {
@@ -19,7 +23,6 @@ function main(input) {
                     return ret;
                 },
                 next_monkey: (value) => {
-                    const mod = Number.parseInt(monkey_lines[3].split("divisible by ")[1])
                     if (value % mod == 0) {
                         return (monkey_lines[4].split("throw to ")[1]).toUpperCase();
                     } else {
@@ -42,7 +45,8 @@ function main(input) {
         monkeys[name].items.map((item) => {
             let new_item_value = monkeys[name].inspection(item);
             monkeys[name].inspected_total++;
-            new_item_value = Math.floor(new_item_value / 3)
+            // new_item_value = Math.floor(new_item_value / 3)
+            new_item_value = new_item_value % common_mod;
             let next_monkey = monkeys[name].next_monkey(new_item_value);
             // console.log(next_monkey);
             monkeys[next_monkey].items.push(new_item_value);
@@ -52,7 +56,7 @@ function main(input) {
         monkeys[name].items = [];
     }
 
-    const rounds = 20;
+    const rounds = 10000;
     for (const i in Array.from({ length: rounds }, (i) => i)) {
         console.log("round:", i)
         for (const name in monkeys) {
