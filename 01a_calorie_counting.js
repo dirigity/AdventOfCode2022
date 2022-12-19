@@ -1,12 +1,7 @@
 
 
 function main(input) {
-    let res = input.split("\n\n").map((calories) => calories.split("\n").reduce((sum, curr) => {
-        // console.log(Number.parseInt(curr))
-        return sum + Number.parseInt(curr)
-    }, 0)).reduce((max, curr) => {
-        return Math.max(max, curr)
-    }, 0);
+    let res = input.split("\n\n").map((calories) => calories.split("\n").reduce((sum, curr) => sum + Number.parseInt(curr), 0)).reduce((max, curr) => Math.max(max, curr), 0);
     console.log(res);
 }
 

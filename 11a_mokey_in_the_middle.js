@@ -54,7 +54,7 @@ function main(input) {
 
     const rounds = 20;
     for (const i in Array.from({ length: rounds }, (i) => i)) {
-        console.log("round:", i)
+        // console.log("round:", i)
         for (const name in monkeys) {
             turn_of(name);
         }
