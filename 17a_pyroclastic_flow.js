@@ -105,7 +105,7 @@ function main(input) {
             pos_y = total_height + 3;
         }
 
-        if (false) {
+        if (true) {
             let tmp = blit(board, piece_type, pos_x, pos_y);
             console.log("+------")
             console.log(tmp.map(row => row.slice(Math.max(0, board_height(tmp) - 40), board_height(tmp) + 1)).map(e => "|" + e.join("")).join("\n"))
